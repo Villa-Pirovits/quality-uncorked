@@ -17,24 +17,22 @@ My initial hypothesis is that drivers of rice.
  
 # The Plan
  
-* Aquire data from database
+* Aquire data from https://data.world/food/wine-quality
  
-* Prepare data
-   * Create Engineered columns from existing data
-       * baseline
-       * rating_difference
-       * game_rating
-       * lower_rated_white
-       * time_control_group
+* Prepare data  
+   * Create Engineered columns from cluster model
+       * cluster_2
+       * cluster_3
+       * cluster_4
  
-* Explore data in search of drivers for churn
+* Explore data in search of drivers for quality
    * Answer the following initial questions
-       * Are customers with DSL more or less likely to churn?
-       * What month are customers most likely to churn and does that depend on their contract type?
-       * Is there a service that is associated with more churn than expected?
-       * Do customers who churn have a higher average monthly spend than those who don't?
+       * ----?
+       * ----?
+       * ----?
+       * ----?
       
-* Develop a Model to predict if a customer will churn
+* Develop a Model to predict the quality score of wine
    * Use drivers identified in explore to build predictive models of different types
    * Evaluate models on train and validate data
    * Select the best clusters based on data run on model
@@ -43,47 +41,6 @@ My initial hypothesis is that drivers of rice.
 * Draw conclusions
  
 # Data Dictionary
-
-
-:
-Fixed acidity in wine refers to the  These acids contribute to the tartness, sourness, and overall acidity of the wine. Examples of fixed acids in wine include tartaric acid, malic acid, and citric acid. The level of fixed acidity affects the balance and perceived freshness of the wine.
-
-:
-Volatile acidity refers to the concentration of volatile acids in wine, primarily acetic acid. It is responsible for the vinegar-like smell and taste that can occur in wines with high levels of volatile acidity. In small amounts, volatile acidity can contribute to complexity and aroma, but excessive levels can be a wine fault.
-
-:
-Citric acid is a type of fixed acid found in wine. It adds a citrusy and refreshing flavor to the wine, enhancing its overall freshness and acidity.
-
-:
-Residual sugar refers to the amount of sugar that remains in the wine after fermentation. It is measured in grams per liter (g/L). Wines with higher residual sugar levels will taste sweeter, while wines with very low or no residual sugar are considered dry.
-
-:
-Chlorides are salts of chlorine that can be found in wine. In small amounts, chlorides can contribute to the wine's overall flavor and mouthfeel. However, excessive levels can negatively impact the taste and balance of the wine.
-
-:
-Free sulfur dioxide (SO2) is a preservative commonly added to wines to prevent oxidation and microbial spoilage. It also acts as an antioxidant. The level of free SO2 in wine is regulated to ensure proper preservation without negatively affecting taste and aroma.
-
-:
-Total sulfur dioxide refers to the sum of both free and bound forms of SO2 in wine. Bound SO2 combines with other compounds and is less effective as a preservative. Winemakers must carefully manage the total SO2 levels to maintain wine quality and stability.
-
-:
-As mentioned earlier, density in wine refers to its mass per unit volume (g/mL or kg/L). It can provide insights into the wine's composition and concentration.
-
-:
-pH is a measure of acidity or alkalinity in wine on a logarithmic scale from 0 to 14. Lower pH values indicate higher acidity, while higher values indicate lower acidity. The pH level influences the stability and microbial activity in the wine.
-
- (Sulphites):
-Sulphates, or sulfites, are sulfur-containing compounds used as preservatives in winemaking. They prevent unwanted oxidation and microbial spoilage, ensuring wine quality and shelf life.
-
-:
-Alcohol content in wine is expressed as a percentage of ethanol by volume. It is a key determinant of a wine's body, warmth, and perceived intensity. Higher alcohol content can contribute to a wine's richness and mouthfeel.
-
-
-
-
-
-
-
 
 | Feature | Definition |
 |:--------|:-----------|
@@ -102,17 +59,17 @@ Alcohol content in wine is expressed as a percentage of ethanol by volume. It is
 
 # Steps to Reproduce
 1) Clone this repo.
-2) Acquire the data from 
+2) Acquire the data from https://data.world/food/wine-quality
 3) Put the data in the file containing the cloned repo.
 4) Run notebook.
  
 # Takeaways and Conclusions
-* Customers with Fiber Optics have more churn than DSL.
-* Encouraging customers to be on automatic payment plan will seems to reduce churn.
-* 643 manual check writers churned which is a 45% churn rate for all payment types.
-* When the monthly charges reached approximate \$70 the churn rate rised.
-* The median monthly payment for customers who churns is \$79.70
-* Customers who do not churn makeup 73% of the data
+* ---
+* ---
+* ---
+* ---
+* ---
+* ---
 * The final model failed to significantly outperform the baseline.
 * Possible reasons include:
     “payment_type” and “contract_type” may not have had meaningful relation to who will churn.
