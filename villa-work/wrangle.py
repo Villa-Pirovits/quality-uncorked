@@ -1,8 +1,11 @@
-
+# imports
 import os
 import pandas as pd
 import numpy as np
 
+
+#import sklearn modules
+from sklearn.model_selection import train_test_split
 
 ################################### acquire zillow data ###################################
 
@@ -91,8 +94,34 @@ def clean_wine():
     df = df.reset_index(drop=True)
 
 
-    df = df.drop(columns=['quality'], inplace=True)
+    df.drop(columns=['quality'], inplace=True)
 
     return df
 
+
+def split_wine():
+    
+    # making the dataframe
+    df = clean_wine()
+    
+    # creating a dummy column for type
+    df_dummies = pd.get_dummies(df.type, drop_first=True)
+    
+    # Concatenate the original DataFrame and the dummy variables DataFrame
+    df = pd.concat([df, df_dummies], axis=1)
+
+    # dropping the original feature of type
+    df.drop(columns='type', inplace=True, axis=1)
+
+
+    # split test off, 20% of original df size. 
+    train_validate, test = train_test_split(df, test_size=.2, 
+                                            random_state=42)
+
+    # split validate off, 30% of what remains (24% of original df size)
+    # thus train will be 56% of original df size. 
+    train, validate = train_test_split(train_validate, test_size=.3, 
+                                       random_state=42)
+    
+    return train, validate, test
 

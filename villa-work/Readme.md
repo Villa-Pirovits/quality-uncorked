@@ -27,10 +27,10 @@ My initial hypothesis is that drivers of rice.
  
 * Explore data in search of drivers for quality
    * Answer the following initial questions
-       * ----?
-       * ----?
-       * ----?
-       * ----?
+       * Density, how does that affect residual sugars?
+       * How does alocohol affect density?
+       * Is the average pH higher in red or white wine?
+       * Is the average alcohol higher in red or white wine?
       
 * Develop a Model to predict the quality score of wine
    * Use drivers identified in explore to build predictive models of different types
@@ -55,7 +55,8 @@ My initial hypothesis is that drivers of rice.
 |pH| a measure of acidity or alkalinity in wine on a logarithmic scale from 0 to 14|
 |sulphates| sulfur-containing compounds used as preservatives in winemaking|
 |alcohol| percentage of ethanol by volume|
-
+|quality| score of wine, ranging from 3-9|
+|type| type of wine, red or white|
 
 # Steps to Reproduce
 1) Clone this repo.
