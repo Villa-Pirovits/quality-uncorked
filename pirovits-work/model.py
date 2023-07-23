@@ -9,6 +9,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
+from sklearn.feature_selection import SelectKBest, f_regression
+
+from sklearn.metrics import mean_squared_error, r2_score, explained_variance_score
+
+from sklearn.linear_model import LinearRegression, LassoLars, TweedieRegressor
+from sklearn.preprocessing import PolynomialFeatures
 
 def train_validate_test(df, target):
     '''
@@ -89,3 +95,193 @@ def scale_data(X_train, X_validate, X_test):
     X_test_scaled = pd.DataFrame(X_test_scaled).rename(columns=zipped)
     
     return X_train_scaled, X_validate_scaled, X_test_scaled
+
+def baseline(y_train, y_validate, y_test):
+    # turn series into dataframes to append new columns with predicted values
+    y_train_mvp = pd.DataFrame(y_train)
+    y_validate_mvp = pd.DataFrame(y_validate)
+    y_test_mvp = pd.DataFrame(y_test)
+
+    # 1. Predict based on mean
+    quality_pred_mean = y_train_mvp['quality'].mean()
+    y_train_mvp['quality_pred_mean'] = quality_pred_mean
+    y_validate_mvp['quality_pred_mean'] = quality_pred_mean
+
+    # 2. Do same for median
+    quality_pred_median_mvp = y_train_mvp['quality'].median()
+    y_train_mvp['quality_pred_median'] = quality_pred_median_mvp
+    y_validate_mvp['quality_pred_median'] = quality_pred_median_mvp
+
+    # 3.  RMSE of tax_value_pred_mean
+    rmse_train = mean_squared_error(y_train_mvp.quality, y_train_mvp.quality_pred_mean) ** (1/2)
+    rmse_validate = mean_squared_error(y_validate_mvp.quality, y_validate_mvp.quality_pred_mean) ** (1/2)
+
+    print("RMSE using Mean\nTrain/In-Sample: ", round(rmse_train, 2), 
+          "\nValidate/Out-of-Sample: ", round(rmse_validate, 2)) 
+
+    # 4.  RMSE of tax_value_pred_median
+    rmse_train = mean_squared_error(y_train_mvp.quality, y_train_mvp.quality_pred_median) ** (1/2)
+    rmse_validate = mean_squared_error(y_validate_mvp.quality, y_validate_mvp.quality_pred_median) ** (1/2)
+
+    print("RMSE using Median\nTrain/In-Sample: ", round(rmse_train, 2), 
+          "\nValidate/Out-of-Sample: ", round(rmse_validate, 2))
+    
+#Create dataframes with the clusters
+def cluster_to_dummy(X):  
+    
+    feat_to_dummy = ['2_cluster', '3_cluster', '4_cluster']
+    cluster_dummy_list = []
+
+    for feat in feat_to_dummy:
+        # creating a dummy column for the current feature
+        df_dummies = pd.get_dummies(X[feat], drop_first=True)
+
+        # Concatenate the original DataFrame and the dummy variables DataFrame
+        df = pd.concat([X, df_dummies], axis=1)
+
+        # dropping the original feature
+        df.drop(columns=feat_to_dummy, inplace=True)
+
+        cluster_dummy_list.append(df)
+        
+    return cluster_dummy_list
+
+
+ # Perform clustering on two features   
+def linear_regression_two_features(X_train_2, X_validate_2, y_train, y_validate, y_test):
+    # turn series into dataframes to append new columns with predicted values
+    y_train = pd.DataFrame(y_train)
+    y_validate = pd.DataFrame(y_validate)
+    y_test = pd.DataFrame(y_test)
+
+    X_train_2 = X_train_2.rename(columns={1: 'cluster_1', 2: 'cluster_2', 3: 'cluster_3'})
+    X_validate_2 = X_validate_2.rename(columns={1: 'cluster_1', 2: 'cluster_2', 3: 'cluster_3'})
+    #. Create the model object
+    lm = LinearRegression()
+
+    #. Fit to training and specify column in y_train since it is now a series
+    lm.fit(X_train_2, y_train.quality)
+
+    # predict
+    y_train['quality_pred_lm'] = lm.predict(X_train_2)
+
+    # RMSE
+    rmse_train = mean_squared_error(y_train.quality, y_train.quality_pred_lm) ** (1/2)
+
+    # predict validate
+    y_validate['quality_pred_lm'] = lm.predict(X_validate_2)
+
+    #Validate RMSE 
+    rmse_validate = mean_squared_error(y_validate.quality, y_validate.quality_pred_lm) ** (1/2)
+
+    print('RMSE for OLS using LinearRegression\nTraining/In-Sample: ', rmse_train,
+         '\nValidation/Out-of-Sample: ', rmse_validate)
+    
+ #Perform clustering on the three features   
+
+def linear_regression_three_features(X_train_3, X_validate_3, y_train, y_validate, y_test):
+    
+    # turn series into dataframes to append new columns with predicted values
+    y_train = pd.DataFrame(y_train)
+    y_validate = pd.DataFrame(y_validate)
+    y_test = pd.DataFrame(y_test)
+
+    X_train_3 = X_train_3.rename(columns={1: 'cluster_1', 2: 'cluster_2', 3: 'cluster_3'})
+    X_validate_3 = X_validate_3.rename(columns={1: 'cluster_1', 2: 'cluster_2', 3: 'cluster_3'})
+    #. Create the model object
+    lm = LinearRegression()
+
+    #. Fit to training and specify column in y_train since it is now a series
+    lm.fit(X_train_3, y_train.quality)
+
+    # predict
+    y_train['quality_pred_lm'] = lm.predict(X_train_3)
+
+    # RMSE
+    rmse_train = mean_squared_error(y_train.quality, y_train.quality_pred_lm) ** (1/2)
+
+    # predict validate
+    y_validate['quality_pred_lm'] = lm.predict(X_validate_3)
+
+    #Validate RMSE 
+    rmse_validate = mean_squared_error(y_validate.quality, y_validate.quality_pred_lm) ** (1/2)
+
+    print('RMSE for OLS using LinearRegression\nTraining/In-Sample: ', rmse_train,
+         '\nValidation/Out-of-Sample: ', rmse_validate)
+    
+
+#Perform clustering on the 4 features  
+def linear_regression_four_features(X_train_4, X_validate_4, y_train, y_validate, y_test):
+
+    # turn series into dataframes to append new columns with predicted values
+    y_train = pd.DataFrame(y_train)
+    y_validate = pd.DataFrame(y_validate)
+    y_test = pd.DataFrame(y_test)
+
+    X_train_4 = X_train_4.rename(columns={1: 'cluster_1', 2: 'cluster_2', 3: 'cluster_3'})
+    X_validate_4 = X_validate_4.rename(columns={1: 'cluster_1', 2: 'cluster_2', 3: 'cluster_3'})
+    #. Create the model object
+    lm = LinearRegression()
+
+    #. Fit to training and specify column in y_train since it is now a series
+    lm.fit(X_train_4, y_train.quality)
+
+    # predict
+    y_train['quality_pred_lm'] = lm.predict(X_train_4)
+
+    # RMSE
+    rmse_train = mean_squared_error(y_train.quality, y_train.quality_pred_lm) ** (1/2)
+
+    # predict validate
+    y_validate['quality_pred_lm'] = lm.predict(X_validate_4)
+
+    #Validate RMSE 
+    rmse_validate = mean_squared_error(y_validate.quality, y_validate.quality_pred_lm) ** (1/2)
+
+    print('RMSE for OLS using LinearRegression\nTraining/In-Sample: ', rmse_train,
+         '\nValidation/Out-of-Sample: ', rmse_validate)
+    
+
+#Quadratic Model
+def quadratic_model(X_train_2, X_validate_2, y_train, y_validate, y_test):
+    X_train_2 = X_train_2.rename(columns={1:'cluster1', 2:'cluster2', 3:'cluster3'})
+    X_validate_2 = X_validate_2.rename(columns={1:'cluster1', 2:'cluster2', 3:'cluster3'})
+
+    y_train = pd.DataFrame(y_train)
+    y_validate = pd.DataFrame(y_validate)
+    y_test = pd.DataFrame(y_test)
+
+
+    for i in range(0,5):
+        # make the polynomial features to get a new set of features
+        pf = PolynomialFeatures(degree=i)
+
+        # fit and transform X_train_scaled
+        X_train_degree2 = pf.fit_transform(X_train_2)
+
+        # transform X_validate_scaled & X_test_scaled
+        X_validate_degree2 = pf.transform(X_validate_2)
+        #X_test_degree2_mvp = pf.transform(X_test_mvp)
+
+        # create the model object
+        lm2 = LinearRegression()
+
+        # fit the model to our training data. We must specify the column in y_train, 
+        # since we have converted it to a dataframe from a series! 
+        lm2.fit(X_train_2, y_train.quality)
+
+        # predict train
+        y_train['quality_pred_poly'] = lm2.predict(X_train_2)
+
+        # evaluate: rmse
+        rmse_train = mean_squared_error(y_train.quality, y_train.quality_pred_poly)**(1/2)
+
+        # predict validate
+        y_validate['quality_pred_poly'] = lm2.predict(X_validate_2)
+
+        # evaluate: rmse
+        rmse_validate = mean_squared_error(y_validate.quality, y_validate.quality_pred_poly)**(1/2)
+
+        print("RMSE for Polynomial Model, degrees=", i, "\nTraining/In-Sample: ", rmse_train, 
+              "\nValidation/Out-of-Sample: ", rmse_validate)
+        
