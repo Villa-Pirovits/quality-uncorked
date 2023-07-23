@@ -99,6 +99,12 @@ def clean_wine():
     return df
 
 
+
+################################### split the data ###################################
+
+
+
+
 def split_wine():
     
     # making the dataframe
@@ -125,3 +131,55 @@ def split_wine():
     
     return train, validate, test
 
+
+
+################################### X and y split ###################################
+
+
+
+def X_y_split():
+    
+    train, validate, test = split_wine()
+
+    # split train into X (dataframe, drop target) & y (series, keep target only)
+    X_train = train.drop(columns=['quality', 'white'])
+    y_train = train['quality']
+    # split validate into X (dataframe, drop target) & y (series, keep target only)
+    X_validate = validate.drop(columns=['quality', 'white'])
+    y_validate = validate['quality']
+    # split test into X (dataframe, drop target) & y (series, keep target only)
+    X_test = test.drop(columns=['quality', 'white'])
+    y_test = test['quality']
+    
+    
+    return X_train, y_train, X_validate, y_validate, X_test, y_test
+
+
+
+
+
+################################### X and y split ###################################
+
+
+
+
+def scaled_data():
+    
+    
+    X_train, y_train, X_validate, y_validate, X_test, y_test = X_y_split()
+    
+    
+    scaler = MinMaxScaler()
+    # Note that we only call .fit with the training data,
+    # but we use .transform to apply the scaling to all the data splits.
+    scaler.fit(X_train)
+
+    X_train_scaled = scaler.transform(X_train)
+    X_validate_scaled = scaler.transform(X_validate)
+    X_test_scaled = scaler.transform(X_test)
+    
+    return X_train_scaled, X_validate_scaled, X_test_scaled
+
+
+    
+    
