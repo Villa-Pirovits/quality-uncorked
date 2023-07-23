@@ -252,7 +252,7 @@ def quadratic_model(X_train_2, X_validate_2, y_train, y_validate, y_test):
     y_test = pd.DataFrame(y_test)
 
 
-    for i in range(0,5):
+    for i in range(2,3):
         # make the polynomial features to get a new set of features
         pf = PolynomialFeatures(degree=i)
 
@@ -284,4 +284,40 @@ def quadratic_model(X_train_2, X_validate_2, y_train, y_validate, y_test):
 
         print("RMSE for Polynomial Model, degrees=", i, "\nTraining/In-Sample: ", rmse_train, 
               "\nValidation/Out-of-Sample: ", rmse_validate)
-        
+
+#Run the test     
+def test(X_train_2, X_test_scaled, X_test, y_train, y_validate, y_test):
+    #Turn Series into dataframes
+    y_train = pd.DataFrame(y_train)
+    y_validate = pd.DataFrame(y_validate)
+    y_test = pd.DataFrame(y_test)
+
+    #Create the two feature dataframe scaled for the kmeans
+    #X_test_2_features = X_test_scaled[['density', 'alcohol']]
+    #X_test['2_cluster'] = kmeans2.predict(X_test_2_features) Left out for scope issues
+    #Create a dummy dataframe for the test set needed for the linear regression
+    df_dummies = pd.get_dummies(X_test['2_cluster'], drop_first=True)
+    X_test = pd.concat([X_test, df_dummies], axis=1)
+    X_test.drop(columns='2_cluster', inplace=True)
+    X_train_2 = X_train_2.rename(columns={1: 'cluster_1', 2: 'cluster_2', 3: 'cluster_3'})
+
+    # Perform clustering on two features   
+    #def linear_regression_final(X_test_2 y_test):
+    # turn series into dataframes to append new columns with predicted values
+    y_test = pd.DataFrame(y_test)
+
+    X_test = X_test.rename(columns={1: 'cluster_1', 2: 'cluster_2', 3: 'cluster_3'})
+    #. Create the model object
+    lm = LinearRegression()
+
+    #. Fit to training and specify column in y_train since it is now a series
+    lm.fit(X_train_2, y_train.quality)
+
+    # predict
+    y_test['quality_pred_lm'] = lm.predict(X_test)
+
+    # RMSE
+    rmse_test = mean_squared_error(y_test.quality, y_test.quality_pred_lm) ** (1/2)
+
+    print('RMSE for OLS using LinearRegression\nTest: ', rmse_test)
+    
