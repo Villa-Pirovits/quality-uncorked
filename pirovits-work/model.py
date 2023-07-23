@@ -320,4 +320,46 @@ def test(X_train_2, X_test_scaled, X_test, y_train, y_validate, y_test):
     rmse_test = mean_squared_error(y_test.quality, y_test.quality_pred_lm) ** (1/2)
 
     print('RMSE for OLS using LinearRegression\nTest: ', rmse_test)
+
+
+#Clusters on 2 three and four features and adds those results to the X_train, X_validate, and X_test 
+def create_cluster_models(X_train, X_validate, X_test, X_train_scaled, X_validate_scaled, X_test_scaled):
+    X_train_2_features = X_train_scaled[['density', 'alcohol']]
+    X_validate_2_features = X_validate_scaled[['density', 'alcohol']]
+
+
+    kmeans2 = KMeans(n_clusters=4)
+    kmeans2.fit(X_train_2_features)
+
+    X_train['2_cluster'] = kmeans2.predict(X_train_2_features)
+    X_validate['2_cluster'] = kmeans2.predict(X_validate_2_features)
+
+    X_test_2_features = X_test_scaled[['density', 'alcohol']]
+    X_test['2_cluster'] = kmeans2.predict(X_test_2_features)
+
+
+    X_train_3_features = X_train_scaled[['residual sugar', 'total sulfur dioxide', 'alcohol']]
+    X_train_3_features
+    X_validate_3_features = X_validate_scaled[['residual sugar', 'total sulfur dioxide', 'alcohol']]
+    X_validate_3_features
+
+    kmeans3 = KMeans(n_clusters=4)
+    kmeans3.fit(X_train_3_features)
+
+    X_train['3_cluster'] = kmeans3.predict(X_train_3_features)
+    X_validate['3_cluster'] = kmeans3.predict(X_validate_3_features)
+
+
+    X_train_4_features = X_train_scaled[['volatile acidity', 'chlorides', 'density', 'alcohol']]
+    X_train_4_features
+    X_validate_4_features = X_validate_scaled[['volatile acidity', 'chlorides', 'density', 'alcohol']]
+    X_validate_4_features
+
+    kmeans4 = KMeans(n_clusters=4)
+    kmeans4.fit(X_train_4_features)
+
+    X_train['4_cluster'] = kmeans4.predict(X_train_4_features)
+    X_validate['4_cluster'] = kmeans4.predict(X_validate_4_features)
+    
+    return X_train, X_validate, X_test
     
