@@ -232,7 +232,7 @@ def cluster_to_dummy(X):
 
 def baseline():
 
-    X_train, y_train, X_validate, y_validate, X_test, y_test =  train_validate_test_dummy()
+    X_train, y_train, X_validate, y_validate, X_test, y_test =  create_cluster_models()
 
     # turn series into dataframes to append new columns with predicted values
     y_train_mvp = pd.DataFrame(y_train)

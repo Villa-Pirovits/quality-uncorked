@@ -6,7 +6,7 @@ We have been tasked to find drivers of wine quality for the California Wine Inst
  
 # Project Goal
  
-* Discover drivers that cause customer to churn
+* Discover drivers that predict wine quality
 * Use drivers to develop a machine learning model to classify the customer as churn or not. 
 * Predict the quality of wine while incorporating unsupervised learning techniques.
 
