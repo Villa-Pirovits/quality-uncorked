@@ -65,20 +65,20 @@ My initial hypothesis is that drivers of rice.
 4) Run notebook.
  
 # Takeaways and Conclusions
-* ---
-* ---
-* ---
-* ---
-* ---
-* ---
-* The final model failed to significantly outperform the baseline.
-* Possible reasons include:
-    “payment_type” and “contract_type” may not have had meaningful relation to who will churn.
-    Since monthly charges" seems to be a larger contributor to churn, adding more of the services to see which service may be contributing to churn. 
+* Clustering based on 2 features (density and alcohol), 3 features (residual sugar, total sulfur dioxide, alcohol), and 4 features (volatile acidity, chlorides, density, alcohol) with k=4 for each produced divergent clusters that performed nearly identically in the final regression models.
+* An ANOVA test was performed to show that the clustered groups were in fact different and valuable 
+* We kept the clusters in new dummy columns and used them as features to perform Logistic and Polynomial Regression on.
+* Our models all performed around with an RMSE around .72 for the Train data, .73 for the validate data.
+* Our test RMSE using 2 clusters came out at .75 units of quality
+* We beat our baseline based on mean of .87 units by .12 points.
+* The final model marginally outperformed baseline.
+
  
 # Recommendations
-* This may be simple enough but have a column for reason for caneling service. Helpful to pinpoint issues and improve service.
-
+* In a future model, consider dropping or combining features through feature engineering in order to reduce multicolinearity issues.  For example total sulfur dioxide and free sulfur dioxide do not both need to be in the model.  Also Alcohol and density are highly correlated as is residual sugar.  
+* Reducing the total number of columns may help in creating a better linear regression.
+* Classification also might provide a better result.
 
 # Next Steps
-* Explore the relation of Fiber Optics to churn. Services like tech support or streaming services could also be explored.
+* Next steps include reevaluating the efficacy of the clustering all together.  If it shows a better result with different features, then we can hone in and narrow our focus with feature engineering where we combine correlated features and drop columns that do not add to our model.  
+* Perhaps also there are differing determinants of quality between red and white wine and "manually clustering" the two might be an interesting to explore what features are in fact different between the two populations and if that has a differential impact of quality vs predicted quality.
